@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { Observable, catchError, from, map, of, switchMap } from 'rxjs';
-import { User } from '../interfaces/user';
+import { User, UserLogin } from '../interfaces/user';
 import { SingleUserResponse, TokenResponse } from '../interfaces/responses';
 
 @Injectable({
@@ -10,15 +10,16 @@ import { SingleUserResponse, TokenResponse } from '../interfaces/responses';
 })
 export class AuthService {
   #logged = signal(false);
-  #http = inject(HttpClient)
+  #http = inject(HttpClient);
+  #authUrl = 'auth';
 
   get logged() {
     return this.#logged.asReadonly();
   }
 
-  login(email: string, password: string, firebaseToken?: string): Observable<void> {
+  login(user: UserLogin, firebaseToken?: string): Observable<void> {
     return this.#http
-      .post<TokenResponse>('auth/login', { email, password, firebaseToken })
+      .post<TokenResponse>(`${this.#authUrl}/login`, { ...user, firebaseToken })
       .pipe(
         switchMap(async (r) => {
           try {
