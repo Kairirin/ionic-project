@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
+  appId: 'irene.ionic.project',
   appName: 'ionic-project',
   webDir: 'www'
 };

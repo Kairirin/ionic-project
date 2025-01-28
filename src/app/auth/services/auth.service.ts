@@ -60,10 +60,4 @@ export class AuthService {
       }),
     );
   }
-
-  getProfile(): Observable<User> { //TODO: Cambiar este método, tiene que ir en profile services
-    return this.#http
-      .get<SingleUserResponse>('auth/profile')
-      .pipe(map((r) => r.user));
-  }
 }
