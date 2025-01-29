@@ -5,13 +5,13 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <form (ngSubmit)="login()" #loginForm="ngForm">
+  <form (ngSubmit)="login()" [formGroup]="loginForm">
     <ion-list>
-      <ion-item>
-        <ion-input type="email" name="email" label="Email" labelPlacement="floating" required email [(ngModel)]="email"></ion-input>
+      <ion-item lines="none">
+        <ion-input type="email" name="email" label="Email" formControlName="email" labelPlacement="floating" errorText="Email is required"></ion-input>
       </ion-item>
-      <ion-item>
-        <ion-input type="password" name="password"  label="Password" labelPlacement="floating" required [(ngModel)]="password"></ion-input>
+      <ion-item lines="none">
+        <ion-input type="password" name="password" formControlName="password" label="Password" labelPlacement="floating" errorText="Password is required"></ion-input>
       </ion-item>
     </ion-list>
     <ion-grid>
