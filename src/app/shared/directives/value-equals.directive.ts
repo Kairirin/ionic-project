@@ -1,4 +1,4 @@
-import { afterRenderEffect, Directive, input, Input } from '@angular/core';
+import { afterRenderEffect, Directive, input } from '@angular/core';
 import {
   AbstractControl,
   NG_VALIDATORS,

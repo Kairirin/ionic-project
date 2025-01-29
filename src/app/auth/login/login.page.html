@@ -8,10 +8,14 @@
   <form (ngSubmit)="login()" [formGroup]="loginForm">
     <ion-list>
       <ion-item lines="none">
-        <ion-input type="email" name="email" label="Email" formControlName="email" labelPlacement="floating" errorText="Email is required"></ion-input>
+        <ion-input type="email" label="Email" formControlName="email" labelPlacement="floating" errorText="Email is required"></ion-input>
       </ion-item>
       <ion-item lines="none">
-        <ion-input type="password" name="password" formControlName="password" label="Password" labelPlacement="floating" errorText="Password is required"></ion-input>
+        <ion-input [type]="showPass ? 'text' : 'password'" label="Password" formControlName="password" labelPlacement="floating" errorText="Password is required">
+          <ion-button fill="clear" slot="end" aria-label="Show/hide" (click)="showPass = !showPass">
+            <ion-icon slot="icon-only" [name]="showPass ? 'eye' : 'eye-off'" aria-hidden="true"></ion-icon>
+          </ion-button>
+        </ion-input>
       </ion-item>
     </ion-list>
     <ion-grid>

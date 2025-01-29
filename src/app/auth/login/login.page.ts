@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { AlertController, IonButton, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonList, IonRouterLink, IonRow, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { AlertController, IonButton, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonList, IonRouterLink, IonRow, IonTitle, IonToolbar, NavController } from '@ionic/angular/standalone';
 import { AuthService } from '../services/auth.service';
 import { Geolocation } from '@capacitor/geolocation';
 import { UserLogin } from '../interfaces/user';
@@ -14,12 +14,13 @@ import { UserLogin } from '../interfaces/user';
   imports: [ ReactiveFormsModule, RouterLink, IonRouterLink, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonInput, IonGrid, IonRow, IonCol, IonButton, IonIcon]
 })
 export class LoginPage {
-  coords = signal<[number, number]>([0, 0]);
+/*   coords = signal<[number, number]>([0, 0]); */
   loading = signal(false); //TODO: No sé si al final implementa esto
+  showPass = false;
 
   #authService = inject(AuthService);
   #alertCtrl = inject(AlertController);
-  // #navCtrl = inject(NavController); TODO: Integrar navegación
+  #navCtrl = inject(NavController);
 
   loginForm = new FormGroup({ //TODO: Comprobar que esté bien
     email: new FormControl('', {
@@ -32,6 +33,13 @@ export class LoginPage {
     }),
   });
 
+  userLogin: UserLogin = {
+    email: '',
+    password: '',
+    lat: 0,
+    lng: 0,
+  };
+
   constructor() {
     this.getLocation();
   }
@@ -41,22 +49,26 @@ export class LoginPage {
       enableHighAccuracy: true
     });
 
-    this.coords.set([coordinates.coords.longitude, coordinates.coords.latitude])
+    this.userLogin.lat = coordinates.coords.latitude;
+    this.userLogin.lng = coordinates.coords.longitude;
+
+/*     this.coords.set([coordinates.coords.longitude, coordinates.coords.latitude]) */
   }
 
   login() {
-    const userLogin: UserLogin = {
+    this.userLogin.email = this.loginForm.get('email')?.getRawValue();
+    this.userLogin.password = this.loginForm.get('password')?.getRawValue();
+/*     const userLogin: UserLogin = {
       email: this.loginForm.get('email')?.getRawValue(),
       password: this.loginForm.get('password')?.getRawValue(),
       lat: this.coords()[1],
       lng: this.coords()[0],
-    };
+    }; */
 
     this.#authService
-      .login(userLogin)
+      .login(this.userLogin)
       .subscribe({
-        next: () => console.log(userLogin),
-        // next: () => this.#navCtrl.navigateRoot(['/products']),
+        next: () => this.#navCtrl.navigateRoot(['/events']),
         error: async (error) => {
           (
             await this.#alertCtrl.create({
@@ -70,4 +82,6 @@ export class LoginPage {
   }
 
   loginGoogle() {} //TODO: No ha dejado instalar el plugin
+
+  loginFacebook() {} //TODO: Falta
 }

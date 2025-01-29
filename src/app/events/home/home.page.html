@@ -1,0 +1,38 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Events</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <form>
+        <ion-input label="Search" labelPlacement="floating" [formControl]="searchControl">
+        </ion-input>
+      </form>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher #refresher slot="fixed" (ionRefresh)="reloadEvents(refresher)">
+    <ion-refresher-content>
+    </ion-refresher-content>
+  </ion-refresher>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="secondary" [routerLink]="['/events/add']" [routerDirection]="'root'">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-list style="padding-bottom: 50px">
+    @for (ev of events(); track ev.id) {
+    <event-card [event]="ev" (deleted)="deleteEvent(ev)"></event-card>
+    }
+  </ion-list>
+
+  <ion-infinite-scroll #infinite (ionInfinite)="loadMoreItems(infinite)" [disabled]="!loadMore">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more events...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
