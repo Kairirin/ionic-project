@@ -6,12 +6,7 @@
     <ion-title>Events</ion-title>
   </ion-toolbar>
   <ion-toolbar>
-    <ion-buttons slot="end">
-      <form>
-        <ion-input label="Search" labelPlacement="floating" [formControl]="searchControl">
-        </ion-input>
-      </form>
-    </ion-buttons>
+    <ion-searchbar debounce="600" [(ngModel)]="search" (ionInput)="reloadEvents()"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
@@ -31,7 +26,7 @@
     }
   </ion-list>
 
-  <ion-infinite-scroll #infinite (ionInfinite)="loadMoreItems(infinite)" [disabled]="!loadMore">
+  <ion-infinite-scroll #infinite (ionInfinite)="loadMoreEvents(infinite)" [disabled]="!loadMore">
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more events...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>

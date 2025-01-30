@@ -1,13 +1,83 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>new-event</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>New event</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">new-event</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <form [formGroup]="eventForm" (ngSubmit)="sendEvent()">
+    <ion-list>
+      <ion-item lines="none">
+        <ion-input label="Title" labelPlacement="floating" formControlName="title" errorText="Title must be at least 5 letters"></ion-input> <!--TODO: Buscar otra forma de meter los validadores para distinto mensaje-->
+        @if (eventForm.get('title')?.dirty && eventForm.get('title')?.valid){
+          <ion-icon name="checkmark-circle" slot="end" color="success"></ion-icon>
+        }
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-input type="date" label="Date" labelPlacement="floating" formControlName="date" errorText="Date is required"></ion-input>
+        @if (eventForm.get('date')?.dirty && eventForm.get('date')?.valid){
+          <ion-icon name="checkmark-circle" slot="end" color="success"></ion-icon>
+        }
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-textarea label="Description" labelPlacement="floating" formControlName="description" errorText="Drescription is required"></ion-textarea>
+        @if (eventForm.get('description')?.dirty && eventForm.get('description')?.valid){
+          <ion-icon name="checkmark-circle" slot="end" color="success"></ion-icon>
+        }
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-input type="number" label="Price" labelPlacement="floating" formControlName="price" errorText="Price must be a number greater than 0"></ion-input>
+        @if (eventForm.get('price')?.dirty && eventForm.get('price')?.valid){
+          <ion-icon name="checkmark-circle" slot="end" color="success"></ion-icon>
+        }
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="inset">
+          <ion-label>Address:</ion-label>
+          @if (newEvent.address) {
+          <p>{{ newEvent.address }}</p>
+          }
+        </ion-label>
+        <ion-button slot="end" (click)="openMap()" color="secondary">
+          <ion-icon name="compass"></ion-icon>
+          Choose
+        </ion-button>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="inset">Photo</ion-label>
+        <ion-button color="secondary" (click)="takePhoto()">
+          <ion-icon name="camera" slot="start"></ion-icon>
+          Camera
+        </ion-button>
+        <ion-button color="tertiary" (click)="pickFromGallery()">
+          <ion-icon name="images" slot="start"></ion-icon>
+          Gallery
+        </ion-button>
+      </ion-item>
+    </ion-list>
+    @if (newEvent.image) {
+      <ion-img [src]="newEvent.image"></ion-img>
+    }
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-button type="submit" color="primary" expand="block" [disabled]="eventForm.invalid || !newEvent.image || !newEvent.address">
+            <ion-icon name="add" slot="start"></ion-icon>
+            Add event
+          </ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button color="danger" expand="block" fill="outline" (click)="resetPage()" [routerLink]="['/events']" [routerDirection]="'root'"> <!--TODO: Cuando salgo una vez guarda las validaciones-->
+            <ion-icon name="arrow-undo-circle" slot="start"></ion-icon>
+            Cancel
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>

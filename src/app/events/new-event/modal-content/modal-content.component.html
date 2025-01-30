@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    @if (coordinates()){
+      <ol-map [coordinates]="coordinates()">
+        <ga-autocomplete (locationChange)="changePlace($event)"></ga-autocomplete>
+        <ol-marker [coordinates]="coordinates()"></ol-marker>
+      </ol-map>
+      <ion-button style="position: absolute; bottom: 0; left: 30%; " color="success" expand="block" (click)="chooseAddress()">
+        <ion-label>Choose address</ion-label>
+      </ion-button>
+    }
+</ion-content>
