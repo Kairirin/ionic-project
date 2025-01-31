@@ -1,13 +1,28 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>event-comments</ion-title>
-  </ion-toolbar>
+<ion-header>
+  <ion-toolbar></ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">event-comments</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-refresher #refresher slot="fixed" (ionRefresh)="loadComments(refresher)">
+    <ion-refresher-content>
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list>
+    <ion-list-header color="tertiary"> Comments </ion-list-header>
+    @for (comment of comments(); track comment.id){
+      <ion-item>
+        <ion-avatar>
+          <img src="{{ comment.user.avatar }}" alt="{{ comment.user.name }}" /> <!--TODO: Añadir enlace al perfil-->
+        </ion-avatar>
+        <p>{{ comment.user.name }}</p> <!--TODO: Que salga en vertical por favor.-->
+        <p>{{ comment.date }}</p>
+        <ion-col>
+          <ion-label>
+            <p>{{ comment.comment }}</p>
+          </ion-label>
+        </ion-col>
+      </ion-item>
+    }
+  </ion-list>
 </ion-content>

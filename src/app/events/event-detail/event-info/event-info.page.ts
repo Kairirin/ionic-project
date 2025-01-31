@@ -1,20 +1,43 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { NavController, AlertController, IonContent, IonHeader, IonToolbar } from '@ionic/angular/standalone';
+import { EventDetailPage } from '../event-detail.page';
+import { EventsService } from '../../services/events.service';
+import { EventCardPage } from '../../event-card/event-card.page';
 
 @Component({
   selector: 'event-info',
   templateUrl: './event-info.page.html',
   styleUrls: ['./event-info.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonContent, IonHeader, IonToolbar, FormsModule, EventCardPage]
 })
-export class EventInfoPage implements OnInit {
+export class EventInfoPage {
+  event = inject(EventDetailPage).event;
 
-  constructor() { }
+  #alertCtrl = inject(AlertController);
+  #eventsService = inject(EventsService);
+  #nav = inject(NavController);
 
-  ngOnInit() {
+  async deleteEvent() {
+    const alert = await this.#alertCtrl.create({
+      header: 'This event will disappear',
+      message: 'Are you sure you want to continue?',
+      buttons: [
+        {
+          text: 'Ok',
+          handler: () => {
+            this.#eventsService
+              .deleteEvent(this.event()!.id!)
+              .subscribe(() => this.#nav.navigateBack(['/events']));
+          },
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+      ],
+    });
+    alert.present();
   }
-
 }

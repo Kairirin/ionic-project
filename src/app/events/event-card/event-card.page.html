@@ -1,11 +1,6 @@
 <ion-card>
   <a routerDirection="forward" [routerLink]="['/events/', event().id]"><img [src]="event().image" [alt]="event().title"
       style="width: 100%;" /></a>
-  <!--         <ion-item>
-    <ion-icon name="pin" slot="start"></ion-icon>
-    <ion-label>Show map</ion-label>
-    <ion-button fill="outline" slot="end">Show</ion-button>
-  </ion-item> -->
   <ion-chip [routerLink]="['/profile', event().creator.id]">
     <ion-avatar>
         <img src="{{ event().creator.avatar }}" alt="{{ event().creator.name }}" /> <!--TODO: Comprobar que funciona el enlace dentro de la imagen-->
@@ -16,8 +11,8 @@
     </ion-chip>
     <ion-label>{{ event().date | date: 'dd/MM/yyyy' }}</ion-label>
     <ion-card-header>
-      @if (event().mine){
-        <ion-fab vertical="top" horizontal="end" edge>
+        @if (event().mine){
+        <ion-fab vertical="bottom" horizontal="end" edge>
           <ion-fab-button size="small"> <!--TODO: Hacer con un action sheet que tiene más código-->
             <ion-icon name="ellipsis-horizontal"></ion-icon>
           </ion-fab-button>
@@ -41,8 +36,10 @@
     <ion-item>
     <ion-label>{{ event().distance }} km</ion-label> <!--TODO: Dejar esto bonito-->
       <ion-label>{{ event().price | intlCurrency : "EUR" : "es-ES"}}</ion-label>
+    <ion-label>
       <ion-icon name="people" slot="end"></ion-icon>
-    <ion-badge slot="end" color="success">{{event().numAttend}}</ion-badge>
+      <ion-badge slot="end" color="success">{{event().numAttend}}</ion-badge>
+    </ion-label>
   </ion-item>
   
 </ion-card>

@@ -1,13 +1,20 @@
-<ion-header [translucent]="true">
+<ion-header>
+  <ion-toolbar></ion-toolbar>
   <ion-toolbar>
-    <ion-title>event-location</ion-title>
+    <ion-item>
+        <ion-label><p>{{ event()!.address }}</p></ion-label>
+    </ion-item>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">event-location</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+    @if (coordinates()){
+      <ol-map [coordinates]="coordinates()">
+        <ol-marker [coordinates]="coordinates()"></ol-marker>
+      </ol-map>
+
+      <ion-fab-button (click)="startNavigation()" size="small" style="position: absolute; bottom: 0; right: 0;" color="tertiary">
+        <ion-icon size="small" name="navigate"></ion-icon>
+      </ion-fab-button>
+    }
 </ion-content>

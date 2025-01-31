@@ -5,7 +5,7 @@ import { SplashScreen } from '@capacitor/splash-screen';
 import { Platform, IonApp, IonContent, IonIcon, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterLink, IonRouterOutlet, IonSplitPane, IonAvatar, IonImg, IonButton, NavController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { User } from './auth/interfaces/user';
-import { home, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle, planet, eye, eyeOff, exit, add, trash, pencil, ellipsisHorizontal, people, search, compass, close, informationCircle, chatboxEllipses } from 'ionicons/icons';
+import { home, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle, planet, eye, eyeOff, exit, add, trash, pencil, ellipsisHorizontal, people, search, compass, close, informationCircle, chatboxEllipses, navigate, thumbsUp, thumbsDown } from 'ionicons/icons';
 import { UsersService } from './profile/services/users.service';
 import { AuthService } from './auth/services/auth.service';
 
@@ -26,7 +26,7 @@ export class AppComponent {
     { title: 'New event', url: '/events/add', icon: 'add'}
   ];
   constructor() {
-    addIcons({ planet, home, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle, eye, eyeOff, exit, add, trash, pencil, ellipsisHorizontal, people, search, compass, close, informationCircle, chatboxEllipses });
+    addIcons({ planet, home, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle, eye, eyeOff, exit, add, trash, pencil, ellipsisHorizontal, people, search, compass, close, informationCircle, chatboxEllipses, navigate, thumbsUp, thumbsDown });
 
     effect(() => {
       if (this.#authService.logged()) {

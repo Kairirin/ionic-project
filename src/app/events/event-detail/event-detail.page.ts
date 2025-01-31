@@ -1,5 +1,4 @@
 import { Component, computed, inject, input, numberAttribute } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { IonBackButton, IonButtons, IonHeader, IonIcon, IonLabel, IonTabBar, IonTabButton, IonTabs, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 import { EventsService } from '../services/events.service';
 import { rxResource } from '@angular/core/rxjs-interop';

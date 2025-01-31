@@ -1,20 +1,31 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonToolbar, IonFabButton, IonIcon, IonLabel, IonItem } from '@ionic/angular/standalone';
+import { EventDetailPage } from '../event-detail.page';
+import { OlMapDirective } from 'src/app/shared/ol-maps/ol-map.directive';
+import { OlMarkerDirective } from 'src/app/shared/ol-maps/ol-marker.directive';
 
 @Component({
   selector: 'event-location',
   templateUrl: './event-location.page.html',
   styleUrls: ['./event-location.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonContent, IonHeader, IonToolbar, FormsModule, OlMapDirective, OlMarkerDirective, IonFabButton, IonIcon, IonLabel, IonItem ]
 })
-export class EventLocationPage implements OnInit {
+export class EventLocationPage {
+  event = inject(EventDetailPage).event;
+  coordinates = signal<[number, number]>([0, 0]);
 
-  constructor() { }
+  constructor() {
+    effect(() => {
+      if(this.event()){
+        this.coordinates.set([this.event()!.lng, this.event()!.lat])
+      }
+    })
+  }
 
-  ngOnInit() {
+  startNavigation(){
+    console.log("Disponible pronto!"); //TODO: Falta por implementar la navegación
   }
 
 }
