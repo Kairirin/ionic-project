@@ -30,9 +30,9 @@
   <ion-list>
     <ion-list-header color="tertiary"> People attending </ion-list-header>
     @for (attend of attendees(); track attend.id){
-      <ion-item>
+      <ion-item [routerLink]="['/profile', attend.id]">
         <ion-avatar>
-          <img src="{{ attend.avatar }}" alt="{{ attend.name }}" /> <!--TODO: Añadir enlace al perfil-->
+          <img src="{{ attend.avatar }}" alt="{{ attend.name }}" />
         </ion-avatar>
         <ion-col>
           <ion-label>

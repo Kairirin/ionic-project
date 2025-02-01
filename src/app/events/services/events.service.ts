@@ -63,8 +63,8 @@ export class EventsService {
     return this.#http.delete<void>(`${this.#eventsUrl}/${id}/attend`);
   }
 
-  addComment(id:number, comment: NewComment): Observable<Comment> {
-    return this.#http.post<Comment>(`${this.#eventsUrl}/${id}/comments`, comment);
+  addComment(id: number, comment: NewComment): Observable<Comment> {
+    return this.#http.post<Comment>(`${this.#eventsUrl}/${id}/comments`, comment).pipe(map((resp) => resp));
   }
 
   getComments(id:number): Observable<Comment[]> {

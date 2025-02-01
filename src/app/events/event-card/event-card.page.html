@@ -3,10 +3,10 @@
       style="width: 100%;" /></a>
   <ion-chip [routerLink]="['/profile', event().creator.id]">
     <ion-avatar>
-        <img src="{{ event().creator.avatar }}" alt="{{ event().creator.name }}" /> <!--TODO: Comprobar que funciona el enlace dentro de la imagen-->
+        <img src="{{ event().creator.avatar }}" alt="{{ event().creator.name }}" /> <!--TODO: Cambiar todos los img por ion-img-->
       </ion-avatar>
       <ion-label>
-        <a [routerLink]="['/profile', event().creator.id]">{{ event().creator.name }}</a> <!--TODO: Si el enlace está en el chip, no hace falta que sea a-->
+        <p>{{ event().creator.name }}</p>
       </ion-label>
     </ion-chip>
     <ion-label>{{ event().date | date: 'dd/MM/yyyy' }}</ion-label>

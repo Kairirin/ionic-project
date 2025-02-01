@@ -1,15 +1,20 @@
-import { Component, computed, DestroyRef, effect, inject, input, numberAttribute, viewChild } from '@angular/core';
-import { AlertController, Platform, IonContent, IonHeader, IonToolbar, IonList, IonListHeader, IonItem, IonAvatar, IonLabel, IonRefresher, IonRefresherContent, IonCol, IonIcon, IonButton,  } from '@ionic/angular/standalone';
+import { Component, computed, DestroyRef, effect, inject, input, numberAttribute, ViewChild, viewChild } from '@angular/core';
+import { AlertController, Platform, IonContent, IonHeader, IonToolbar, IonList, IonListHeader, IonItem, IonAvatar, IonLabel, IonRefresher, IonRefresherContent, IonButton, IonImg  } from '@ionic/angular/standalone';
 import { EventsService } from '../../services/events.service';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EventDetailPage } from '../event-detail.page';
+import { DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { OverlayEventDetail } from '@ionic/core/components';
+import { NewComment } from '../../interfaces/my-event';
+
 
 @Component({
   selector: 'event-comments',
   templateUrl: './event-comments.page.html',
   styleUrls: ['./event-comments.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonToolbar, IonList, IonListHeader, IonItem, IonAvatar, IonLabel, IonRefresher, IonRefresherContent, IonCol, IonIcon, IonButton]
+  imports: [FormsModule, IonContent, IonHeader, IonToolbar, IonList, IonListHeader, IonItem, IonAvatar, IonLabel, IonRefresher, IonRefresherContent, IonButton, DatePipe, IonImg]
 })
 export class EventCommentsPage  {
   #alertCtrl = inject(AlertController);
@@ -33,7 +38,7 @@ export class EventCommentsPage  {
 
     effect(() => {
       if(!this.commentsResource.isLoading()) {
-        this.ionRefresher().complete(); // Si estaba la animación de carga, una vez tenemos comentarios cargados, se cancela
+        this.ionRefresher().complete();
       }
     });
   }
@@ -44,7 +49,7 @@ export class EventCommentsPage  {
 
   async addComment() {
     const alert = await this.#alertCtrl.create({
-      header: 'New commment',
+      header: 'New comment',
       inputs: [
         {
           name: 'comment',
@@ -54,8 +59,8 @@ export class EventCommentsPage  {
       ],
       buttons: [
         {
-          text: 'Add',
           role: 'ok',
+          text: 'Add',
         },
         {
           role: 'cancel',
@@ -67,10 +72,20 @@ export class EventCommentsPage  {
     await alert.present();
     const result = await alert.onDidDismiss();
 
-    if (result.role === 'ok') {
+    if (result.role === 'ok' && result.data.values.comment !== "") {
+      const newComment: NewComment = {
+        comment: result.data.values.comment
+      }
+
       this.#eventsService
-        .addComment(this.id(), result.data.values.comment)
-        .subscribe((comment) => this.commentsResource.update(comments => [...comments!, comment]));
+        .addComment(this.id(), newComment)
+        .subscribe({
+          next: (comment) => {
+            const com = this.comments();
+            this.commentsResource.set([...com!, comment]);
+          },
+          error: (error) => console.log(error)
+        });
     }
   }
 }

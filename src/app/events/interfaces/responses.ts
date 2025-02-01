@@ -15,3 +15,4 @@ export interface SingleEventResponse {
 export interface CommentsResponse {
     comments: Comment[];
 }
+

@@ -13,7 +13,6 @@ import { RouterLink } from '@angular/router';
 })
 export class EventDetailPage {
   #eventsService = inject(EventsService);
-
   id = input.required({ transform: numberAttribute });
 
   eventResource = rxResource({

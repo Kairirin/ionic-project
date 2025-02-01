@@ -1,0 +1,11 @@
+<ion-header>
+  <ion-toolbar></ion-toolbar>
+</ion-header>
+
+<ion-content>
+    @if (coordinates()){
+      <ol-map [coordinates]="coordinates()">
+        <ol-marker [coordinates]="coordinates()"></ol-marker>
+      </ol-map>
+    }
+</ion-content>

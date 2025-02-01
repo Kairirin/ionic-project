@@ -3,13 +3,14 @@ import { Platform, IonContent, IonHeader, IonToolbar, IonList, IonListHeader, Io
 import { EventsService } from '../../services/events.service';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EventDetailPage } from '../event-detail.page';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'event-attend',
   templateUrl: './event-attend.page.html',
   styleUrls: ['./event-attend.page.scss'],
   standalone: true,
-  imports: [ IonContent, IonHeader, IonToolbar, IonList,   IonListHeader, IonItem, IonAvatar, IonLabel, IonRefresher, IonRefresherContent, IonCol, IonIcon, IonButton ],
+  imports: [ IonContent, IonHeader, IonToolbar, IonList,   IonListHeader, IonItem, IonAvatar, IonLabel, IonRefresher, IonRefresherContent, IonCol, IonIcon, IonButton, RouterLink ],
 })
 export class EventAttendPage {
   #eventsService = inject(EventsService);

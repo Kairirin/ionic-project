@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar></ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-img [src]="user().avatar"></ion-img>
+        </ion-item>
+        <ion-item>
+          @if (user().me){
+            <ion-button color="secondary" (click)="takePhoto()">
+              <ion-icon name="camera" slot="start"></ion-icon>
+              Camera
+            </ion-button>
+            <ion-button color="tertiary" (click)="pickFromGallery()">
+              <ion-icon name="images" slot="start"></ion-icon>
+              Gallery
+            </ion-button>
+          }
+        </ion-item>
+      </ion-col>
+      <ion-col>
+        <ion-row>
+          <ion-item>
+            <ion-label>
+              Name:
+              <p>{{ user().name }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-row>
+        <ion-row>
+          <ion-item>
+            <ion-label>
+              Email:
+              <p>{{ user().email }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-row>
+        <ion-row>
+          <ion-item>
+            @if (user().me){
+              <ion-button color="warning" expand="block" (click)="updateProfile()">
+                Edit profile
+              </ion-button>
+              <ion-button color="warning" expand="block" (click)="updatePassword()">
+                Edit password
+              </ion-button>
+            }
+          </ion-item>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
