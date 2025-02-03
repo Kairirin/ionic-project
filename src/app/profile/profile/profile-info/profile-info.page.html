@@ -9,8 +9,8 @@
         <ion-item>
           <ion-img [src]="user().avatar"></ion-img>
         </ion-item>
+        @if (user().me){
         <ion-item>
-          @if (user().me){
             <ion-button color="secondary" (click)="takePhoto()">
               <ion-icon name="camera" slot="start"></ion-icon>
               Camera
@@ -19,10 +19,9 @@
               <ion-icon name="images" slot="start"></ion-icon>
               Gallery
             </ion-button>
-          }
-        </ion-item>
+          </ion-item>
+        }
       </ion-col>
-      @if (!editProfile() && !editPassword()){
         <ion-col>
           <ion-row>
             <ion-item>
@@ -40,74 +39,19 @@
               </ion-label>
             </ion-item>
           </ion-row>
+          @if (user().me){
           <ion-row>
             <ion-item>
-              @if (user().me){
                 <ion-button color="warning" expand="block" (click)="openModal('profile')">
                   Edit profile
                 </ion-button>
                 <ion-button color="warning" expand="block" (click)="openModal('password')">
                   Edit password
                 </ion-button>
-              }
-            </ion-item>
-          </ion-row>
+              </ion-item>
+            </ion-row>
+          }
         </ion-col>
-      } @else if (editProfile()) {
-        <form (ngSubmit)="updateProfile()" [formGroup]="profileForm">
-          <ion-list>
-            <ion-item lines="none">
-              <ion-input type="text" label="Username" formControlName="name" labelPlacement="floating" errorText="Username is required"
-              value="{{ user().name }}"></ion-input>
-            </ion-item> <!--TODO: No consigo que saco el value por defecto, modificar también validación-->
-            <ion-item lines="none">
-              <ion-input type="email" label="Email" formControlName="email" labelPlacement="floating" errorText="Email is required"
-              value="{{ user().email }}">
-              </ion-input>
-            </ion-item>
-          </ion-list>
-          <ion-row>
-            <ion-col>
-              <ion-button type="submit" color="success" expand="block" [disabled]="profileForm.invalid">
-                <ion-icon name="pencil" slot="start"></ion-icon>
-                Update
-              </ion-button>
-            </ion-col>
-            <ion-col>
-              <ion-button (click)="editProfile.set(false)" color="danger" expand="block">
-                <ion-icon name="arrow-undo-circle"></ion-icon>
-                Cancel
-              </ion-button>
-            </ion-col>
-          </ion-row>
-        </form>
-      } @else if (editPassword()){
-        <form (ngSubmit)="updatePassword()" [formGroup]="passwordForm">
-          <ion-list>
-            <ion-item lines="none">
-              <ion-input type="password" label="Password" formControlName="password" labelPlacement="floating" errorText="Password is required"></ion-input>
-            </ion-item>
-            <ion-item lines="none">
-              <ion-input type="password" label="Repeat password" formControlName="password2" labelPlacement="floating" [valueEquals]="passwordForm.get('password')!.getRawValue()" errorText="Passwords do not match">
-              </ion-input>
-            </ion-item>
-          </ion-list>
-          <ion-row>
-            <ion-col>
-              <ion-button type="submit" color="success" expand="block" [disabled]="passwordForm.invalid">
-                <ion-icon name="pencil" slot="start"></ion-icon>
-                Update
-              </ion-button>
-            </ion-col>
-            <ion-col>
-              <ion-button (click)="changeVisualization('password')" color="danger" expand="block">
-                <ion-icon name="arrow-undo-circle"></ion-icon>
-                Cancel
-              </ion-button>
-            </ion-col>
-          </ion-row>
-        </form>
-      }
     </ion-row>
   </ion-grid>
 </ion-content>

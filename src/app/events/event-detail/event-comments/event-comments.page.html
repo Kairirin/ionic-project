@@ -17,8 +17,8 @@
   <ion-list>
     <ion-list-header color="tertiary"> Comments </ion-list-header>
     @for (comment of comments(); track comment.id){
-      <ion-item>
-        <ion-avatar slot="start"><!--TODO: Añadir enlace al perfil-->
+      <ion-item [routerLink]="['/profile', comment.user.id]">
+        <ion-avatar slot="start">
           <ion-img [src]="comment.user.avatar"></ion-img>
         </ion-avatar>
         <ion-label text-wrap>

@@ -1,9 +1,9 @@
 <ion-card>
-  <a routerDirection="forward" [routerLink]="['/events/', event().id]"><img [src]="event().image" [alt]="event().title"
-      style="width: 100%;" /></a>
+  <a routerDirection="forward" [routerLink]="['/events/', event().id]"><ion-img [src]="event().image" [alt]="event().title"
+      style="width: 100%;"></ion-img></a>
   <ion-chip [routerLink]="['/profile', event().creator.id]">
     <ion-avatar>
-        <img src="{{ event().creator.avatar }}" alt="{{ event().creator.name }}" /> <!--TODO: Cambiar todos los img por ion-img-->
+        <ion-img src="{{ event().creator.avatar }}" alt="{{ event().creator.name }}"></ion-img>
       </ion-avatar>
       <ion-label>
         <p>{{ event().creator.name }}</p>

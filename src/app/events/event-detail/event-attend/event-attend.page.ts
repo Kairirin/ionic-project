@@ -1,5 +1,5 @@
 import { Component, computed, DestroyRef, effect, inject, viewChild } from '@angular/core';
-import { Platform, IonContent, IonHeader, IonToolbar, IonList, IonListHeader, IonItem, IonAvatar, IonLabel, IonRefresher, IonRefresherContent, IonCol, IonIcon, IonButton } from '@ionic/angular/standalone';
+import { Platform, IonContent, IonHeader, IonToolbar, IonList, IonListHeader, IonItem, IonAvatar, IonLabel, IonRefresher, IonRefresherContent, IonCol, IonIcon, IonButton, IonImg } from '@ionic/angular/standalone';
 import { EventsService } from '../../services/events.service';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EventDetailPage } from '../event-detail.page';
@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
   templateUrl: './event-attend.page.html',
   styleUrls: ['./event-attend.page.scss'],
   standalone: true,
-  imports: [ IonContent, IonHeader, IonToolbar, IonList,   IonListHeader, IonItem, IonAvatar, IonLabel, IonRefresher, IonRefresherContent, IonCol, IonIcon, IonButton, RouterLink ],
+  imports: [ IonContent, IonHeader, IonToolbar, IonList,   IonListHeader, IonItem, IonAvatar, IonLabel, IonRefresher, IonRefresherContent, IonCol, IonIcon, IonButton, RouterLink, IonImg ],
 })
 export class EventAttendPage {
   #eventsService = inject(EventsService);

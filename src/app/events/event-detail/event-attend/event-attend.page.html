@@ -32,7 +32,7 @@
     @for (attend of attendees(); track attend.id){
       <ion-item [routerLink]="['/profile', attend.id]">
         <ion-avatar>
-          <img src="{{ attend.avatar }}" alt="{{ attend.name }}" />
+          <ion-img src="{{ attend.avatar }}" alt="{{ attend.name }}"></ion-img>
         </ion-avatar>
         <ion-col>
           <ion-label>

@@ -7,6 +7,7 @@ import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { NewComment } from '../../interfaces/my-event';
+import { RouterLink } from '@angular/router';
 
 
 @Component({
@@ -14,7 +15,7 @@ import { NewComment } from '../../interfaces/my-event';
   templateUrl: './event-comments.page.html',
   styleUrls: ['./event-comments.page.scss'],
   standalone: true,
-  imports: [FormsModule, IonContent, IonHeader, IonToolbar, IonList, IonListHeader, IonItem, IonAvatar, IonLabel, IonRefresher, IonRefresherContent, IonButton, DatePipe, IonImg]
+  imports: [FormsModule, IonContent, IonHeader, IonToolbar, IonList, IonListHeader, IonItem, IonAvatar, IonLabel, IonRefresher, IonRefresherContent, IonButton, DatePipe, IonImg, RouterLink]
 })
 export class EventCommentsPage  {
   #alertCtrl = inject(AlertController);

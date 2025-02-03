@@ -3,7 +3,7 @@
     <ion-menu contentId="main-content" type="overlay" [disabled]="!user()">
       @if (user()) {
         <ion-item color="tertiary">
-          <ion-avatar slot="start">
+          <ion-avatar slot="start" [routerLink]="['/profile/me']">
             <ion-img [src]="user()!.avatar"></ion-img>
           </ion-avatar>
           <ion-label>

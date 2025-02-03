@@ -1,5 +1,5 @@
 import { Component, inject, input, output } from '@angular/core';
-import { IonCard, IonCardTitle, IonCardContent, IonCardHeader, IonFab, IonFabButton, IonIcon, IonRouterLink, IonItem, IonFabList, IonLabel, IonAvatar, IonChip, IonBadge, AlertController, ToastController } from '@ionic/angular/standalone';
+import { IonCard, IonCardTitle, IonCardContent, IonCardHeader, IonFab, IonFabButton, IonIcon, IonRouterLink, IonItem, IonFabList, IonLabel, IonAvatar, IonChip, IonBadge, AlertController, ToastController, IonImg } from '@ionic/angular/standalone';
 import { MyEvent } from '../interfaces/my-event';
 import { RouterLink } from '@angular/router';
 import { IntlCurrencyPipe } from 'src/app/shared/pipes/intl-currency.pipe';
@@ -11,7 +11,7 @@ import { EventsService } from '../services/events.service';
   templateUrl: './event-card.page.html',
   styleUrls: ['./event-card.page.scss'],
   standalone: true,
-  imports: [RouterLink, IonRouterLink, IonCard, IonCardTitle, IonCardContent, IonCardHeader, IonFab, IonFabButton, IonIcon, IonItem, IonFabList, IonLabel, IntlCurrencyPipe, DatePipe, IonAvatar, IonChip, IonBadge]
+  imports: [RouterLink, IonRouterLink, IonCard, IonCardTitle, IonCardContent, IonCardHeader, IonFab, IonFabButton, IonIcon, IonItem, IonFabList, IonLabel, IntlCurrencyPipe, DatePipe, IonAvatar, IonChip, IonBadge, IonImg ]
 })
 export class EventCardPage {
   event = input.required<MyEvent>();
