@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonToolbar, IonGrid, IonCol, IonRow, IonItem, IonLabel, IonImg, IonButton, IonIcon, ModalController } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonToolbar, IonGrid, IonCol, IonRow, IonItem, IonLabel, IonImg, IonButton, IonIcon, ModalController, ActionSheetController, NavController } from '@ionic/angular/standalone';
 import { ProfilePage } from '../profile.page';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { UsersService } from '../../services/users.service';
@@ -16,14 +16,44 @@ import { ModalContentComponent } from './modal-content/modal-content.component';
   imports: [IonContent, IonHeader, IonToolbar, FormsModule, IonGrid, IonCol, IonRow, IonItem, IonLabel, IonImg, IonButton, IonIcon, ReactiveFormsModule ]
 })
 export class ProfileInfoPage {
-  user = inject(ProfilePage).user;
+  #userService = inject(UsersService);
   #changeDetector = inject(ChangeDetectorRef);
   #modalCtrl = inject(ModalController);
-  #userService = inject(UsersService);
+  #navCtrl = inject(NavController);
+  #actionSheetController = inject(ActionSheetController);
   #destroyRef = inject(DestroyRef);
+  
+  user = inject(ProfilePage).user;
+
+  async showAction(){
+    const actionSheet = await this.#actionSheetController.create({
+      header: 'About this user',
+      buttons: [
+        {
+          text: 'Events created',
+          icon: 'color-wand',
+          handler: () => {
+            this.#navCtrl.navigateRoot(['/events', { creator: this.user().id}])
+          },
+        },
+        {
+          text: 'Events attending',
+          icon: 'golf',
+          handler: () => {
+            this.#navCtrl.navigateRoot(['/events', { attending: this.user().id}])
+          },
+        },
+        {
+          text: 'Cancel',
+          icon: 'close',
+          role: 'cancel',
+        },
+      ],
+    });
+    await actionSheet.present();
+  }
 
   async openModal(type: string){
-
     if (type === "profile"){
       const modal = await this.#modalCtrl.create({
         component: ModalContentComponent,
