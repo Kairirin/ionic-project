@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { AlertController, IonButton, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonList, IonRouterLink, IonRow, IonTitle, IonToolbar, NavController, IonLabel } from '@ionic/angular/standalone';
 import { AuthService } from '../services/auth.service';
 import { Geolocation } from '@capacitor/geolocation';
-import { UserGoogle, UserLogin } from '../interfaces/user';
+import { UserFacebook, UserGoogle, UserLogin } from '../interfaces/user';
 import { SocialLogin } from '@capgo/capacitor-social-login';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -92,6 +92,7 @@ export class LoginPage {
         },
       });
       if(resp.result.responseType === 'online') {
+        console.log(resp);
         const userGoogle: UserGoogle = {
           token: resp.result.idToken!,
           lat: this.userLogin.lat,
@@ -106,7 +107,7 @@ export class LoginPage {
               console.log("Check");
               this.#navCtrl.navigateRoot(['/events'])
             },
-            error: async (error) => {
+            error: async () => {
               (
                 await this.#alertCtrl.create({
                   header: 'Login error',
@@ -122,5 +123,37 @@ export class LoginPage {
     }
   } //TODO: NO FUNCIONA
 
-  loginFacebook() {} //TODO: Falta
+  async loginFacebook() {
+    const resp = await SocialLogin.login({
+      provider: 'facebook',
+      options: {
+        permissions: ['email'],
+      },
+    });
+    if (resp.result.accessToken) {
+      const userFacebook: UserFacebook = {
+        token: resp.result.accessToken.token,
+        lat: this.userLogin.lat,
+        lng: this.userLogin.lng,
+      };
+
+      this.#authService
+          .loginFacebook(userFacebook)
+          .pipe(takeUntilDestroyed(this.#destroyRef))
+          .subscribe({
+            next: () => {
+              this.#navCtrl.navigateRoot(['/events'])
+            },
+            error: async () => {
+              (
+                await this.#alertCtrl.create({
+                  header: 'Login error',
+                  message: 'Incorrect login',
+                  buttons: ['Ok'],
+                })
+              ).present();
+            },
+          });
+    }
+  }
 }

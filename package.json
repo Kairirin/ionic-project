@@ -21,6 +21,7 @@
     "@angular/platform-browser": "^19.0.0",
     "@angular/platform-browser-dynamic": "^19.0.0",
     "@angular/router": "^19.0.0",
+    "@capacitor-community/facebook-login": "^6.1.2",
     "@capacitor/android": "^7.0.1",
     "@capacitor/angular": "^2.0.3",
     "@capacitor/app": "7.0.0",

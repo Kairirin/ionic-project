@@ -14,10 +14,10 @@ defineCustomElements(window);
 
 bootstrapApplication(AppComponent, {
   providers: [
+    provideExperimentalZonelessChangeDetection(),
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
     provideRouter(routes, withComponentInputBinding(), withPreloading(PreloadAllModules), withRouterConfig({paramsInheritanceStrategy: 'always'})),
-    provideExperimentalZonelessChangeDetection(),
     provideHttpClient(withInterceptors([baseUrlInterceptor, authInterceptor])),
   ],
 });

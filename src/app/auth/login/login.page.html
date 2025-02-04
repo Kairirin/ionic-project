@@ -27,16 +27,23 @@
           </ion-button>
         </ion-col>
         <ion-col>
+          <ion-button color="tertiary" expand="block" [routerLink]="['/auth/register']" [routerDirection]="'root'">
+            <ion-icon name="document-text" slot="start"></ion-icon>
+            Register
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
           <ion-button expand="block" color="primary" (click)="loginGoogle()">
             <ion-icon name="logo-google" slot="start"></ion-icon>
             <ion-label>Login with Google</ion-label>
           </ion-button>
         </ion-col>
         <ion-col>
-          <ion-button color="tertiary" expand="block" [routerLink]="['/auth/register']" [routerDirection]="'root'">
-            <ion-icon name="document-text" slot="start"></ion-icon>
-            Register
-          </ion-button>
+          <ion-button expand="block" color="primary" (click)="loginFacebook()">
+            <ion-icon name="logo-facebook" slot="start"></ion-icon>
+            <ion-label>Login with Facebook</ion-label></ion-button>
         </ion-col>
       </ion-row>
     </ion-grid>
