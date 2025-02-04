@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, effect, inject, input, numberAttribute, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed, toSignal } from "@angular/core/rxjs-interop";
 import { NavController, ToastController, ModalController, IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonIcon, IonLabel, IonButton, IonImg, IonGrid, IonRow, IonCol, IonTextarea, IonInput, IonMenuButton, IonButtons } from '@ionic/angular/standalone';
 import { EventsService } from '../services/events.service';
 import { minDateValidator } from 'src/app/shared/validators/min-date.validator';
-import { MyEventInsert } from '../interfaces/my-event';
+import { MyEvent, MyEventInsert } from '../interfaces/my-event';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { RouterLink } from '@angular/router';
 import { ModalContentComponent } from './modal-content/modal-content.component';
@@ -24,12 +24,14 @@ export class NewEventPage {
   #changeDetector = inject(ChangeDetectorRef);
   #modalCtrl = inject(ModalController);
 
-/*   event = input.required<MyEvent | null>(); TODO: Editar
- */
+  id = input.required({ transform: numberAttribute });
+  address = "";
+  imgBase64 = '';
+
   saved = false;
 
   minDate = new Date().toISOString().slice(0, 10);
-  coordinates = signal<[number, number]>([0, 0]); //TODO: Me falta mapa?
+  coordinates = signal<[number, number]>([0, 0]);
 
   eventForm = new FormGroup({
     title: new FormControl('', {
@@ -50,43 +52,59 @@ export class NewEventPage {
     })
   });
 
-  newEvent: MyEventInsert = {
-    title: '',
-    description: '',
-    price: 0,
-    date: '',
-    lat: 0,
-    lng: 0,
-    address: '',
-    image: ''
-  };
-
-/*   address = "";
-  imgBase64 = ''; */
-
-  constructor() {
-
-   }
-
+   ionViewWillEnter() {
+      if(this.id()){
+        this.#eventsService.getEvent(this.id())
+          .pipe(takeUntilDestroyed(this.#destroyRef))
+          .subscribe({
+            next: (resp) => {
+              this.eventForm.get('title')!.setValue(resp.title);
+              this.eventForm.get('description')!.setValue(resp.description);
+              this.eventForm.get('price')!.setValue(resp.price);
+              this.eventForm.get('date')!.setValue(resp.date.split(" ")[0]);
+              this.imgBase64 = resp.image;
+              this.address = resp.address;
+              this.coordinates.set([resp.lng, resp.lat]);
+              this.eventForm.markAllAsTouched();
+            }
+          });
+      } else {
+        this.eventForm.reset();
+      }
+  }
    sendEvent() {
-    this.newEvent.title = this.eventForm.get('title')!.getRawValue();
-    this.newEvent.description = this.eventForm.get('description')!.getRawValue();
-    this.newEvent.date = this.eventForm.get('date')!.getRawValue();
-    this.newEvent.price = this.eventForm.get('price')!.getRawValue();
+    const newEvent: MyEventInsert = {
+      title: this.eventForm.get('title')!.getRawValue(),
+      description: this.eventForm.get('description')!.getRawValue(),
+      price: this.eventForm.get('price')!.getRawValue(),
+      date: this.eventForm.get('date')!.getRawValue(),
+      lat: this.coordinates()[1],
+      lng: this.coordinates()[0],
+      address: this.address,
+      image: this.imgBase64
+    };
 
-/*     if(this.event()){
-      this.#eventsService.editEvent(newEvent, this.event()!.id)
+    if(this.id()){
+      this.#eventsService.editEvent(newEvent, this.id())
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: () => {
           this.saved = true;
-          this.#router.navigate(['/events']);
+          this.#navCtrl.navigateRoot(['/events']);
         },
-        error: (error) => this.showModal(error.error.message)
+        error: (error) => {
+          async () => {
+            (await this.#toastCtrl.create({
+              duration: 3000,
+              position: 'bottom',
+              message: 'Something went wrong. Try again!'
+            })).present();
+          }
+        }
       });
     }
-    else { */
-      this.#eventsService.addEvent(this.newEvent)
+    else {
+      this.#eventsService.addEvent(newEvent)
         .pipe(takeUntilDestroyed(this.#destroyRef))
         .subscribe({
           next: () => {
@@ -103,7 +121,7 @@ export class NewEventPage {
             }
           }
         });
-/*     } */
+    }
   }
 
   async takePhoto() {;
@@ -116,7 +134,7 @@ export class NewEventPage {
       resultType: CameraResultType.DataUrl 
     });
 
-    this.newEvent.image = photo.dataUrl as string;
+    this.imgBase64 = photo.dataUrl as string;
     this.#changeDetector.markForCheck();
   }
 
@@ -129,7 +147,7 @@ export class NewEventPage {
       resultType: CameraResultType.DataUrl 
     });
 
-    this.newEvent.image = photo.dataUrl as string; //TODO: Que al cancelar la foto sea cadena vacía
+    this.imgBase64 = photo.dataUrl as string; //TODO: Que al cancelar la foto sea cadena vacía
     this.#changeDetector.markForCheck();
   }
 
@@ -140,32 +158,15 @@ export class NewEventPage {
     await modal.present();
     const result = await modal.onDidDismiss();
     if (result.data) {
-      this.newEvent.lat = result.data.coordinates.latitude;
-      this.newEvent.lng = result.data.coordinates.longitude;
-      this.newEvent.address = result.data.address;
+      this.coordinates.set([result.data.coordinates.longitude, result.data.coordinates.latitude]);
+      this.address = result.data.address;
       this.#changeDetector.markForCheck();
     }
     else {
-      this.newEvent.lat = 0;
-      this.newEvent.lng = 0;
-      this.newEvent.address = '';
+      this.coordinates.set([ 0, 0]);
+      this.address = '';
       this.#changeDetector.markForCheck();
     }
   }
-
-  resetPage(){
-    this.eventForm.reset();
-    this.newEvent = {
-      title: '',
-      description: '',
-      price: 0,
-      date: '',
-      lat: 0,
-      lng: 0,
-      address: '',
-      image: ''
-    };
-  }
-
 }
 

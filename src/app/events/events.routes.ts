@@ -16,6 +16,11 @@ export const eventsRoutes: Routes = [
             ),
     },
     {
+      path: ':id/edit',
+      loadComponent: () =>
+          import('./new-event/new-event.page').then((m) => m.NewEventPage),
+    },
+    {
         path: ':id',
         loadComponent: () =>
           import('./event-detail/event-detail.page').then(
@@ -24,4 +29,5 @@ export const eventsRoutes: Routes = [
         loadChildren: () =>
           import('./event-detail/event-detail.routes').then((m) => m.eventDetailRoutes),
       },
+      { path: 'edit', redirectTo: '/events/add', pathMatch: 'full' }
 ];

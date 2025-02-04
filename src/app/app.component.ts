@@ -5,7 +5,7 @@ import { SplashScreen } from '@capacitor/splash-screen';
 import { Platform, IonApp, IonContent, IonIcon, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterLink, IonRouterOutlet, IonSplitPane, IonAvatar, IonImg, IonButton, NavController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { User } from './auth/interfaces/user';
-import { home, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle, planet, eye, eyeOff, exit, add, trash, pencil, ellipsisHorizontal, people, search, compass, close, informationCircle, chatboxEllipses, navigate, thumbsUp, thumbsDown, person, logoGoogle, logoFacebook } from 'ionicons/icons';
+import { home, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle, planet, eye, eyeOff, exit, add, trash, pencil, ellipsisHorizontal, people, search, compass, close, informationCircle, chatboxEllipses, navigate, thumbsUp, thumbsDown, person, logoGoogle, logoFacebook, map, card } from 'ionicons/icons';
 import { UsersService } from './profile/services/users.service';
 import { AuthService } from './auth/services/auth.service';
 import { SocialLogin } from '@capgo/capacitor-social-login';
@@ -29,7 +29,7 @@ export class AppComponent {
   ];
 
   constructor() {
-    addIcons({ planet, home, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle, eye, eyeOff, exit, add, trash, pencil, ellipsisHorizontal, people, search, compass, close, informationCircle, chatboxEllipses, navigate, thumbsUp, thumbsDown, person, logoGoogle, logoFacebook });
+    addIcons({ planet, home, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle, eye, eyeOff, exit, add, trash, pencil, ellipsisHorizontal, people, search, compass, close, informationCircle, chatboxEllipses, navigate, thumbsUp, thumbsDown, person, logoGoogle, logoFacebook, map, card });
 
     effect(() => {
       if (this.#authService.logged()) {
@@ -43,7 +43,7 @@ export class AppComponent {
   }
 
   async initializeApp() {
-    if (this.#platform.is('mobile')) {
+    if (this.#platform.is('capacitor')) {
       await this.#platform.ready();   
       SplashScreen.hide();
       await SocialLogin.initialize({

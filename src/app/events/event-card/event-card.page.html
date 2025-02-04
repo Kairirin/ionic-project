@@ -1,45 +1,49 @@
 <ion-card>
-  <a routerDirection="forward" [routerLink]="['/events/', event().id]"><ion-img [src]="event().image" [alt]="event().title"
-      style="width: 100%;"></ion-img></a>
-  <ion-chip [routerLink]="['/profile', event().creator.id]">
-    <ion-avatar>
-        <ion-img src="{{ event().creator.avatar }}" alt="{{ event().creator.name }}"></ion-img>
-      </ion-avatar>
-      <ion-label>
-        <p>{{ event().creator.name }}</p>
-      </ion-label>
-    </ion-chip>
-    <ion-label>{{ event().date | date: 'dd/MM/yyyy' }}</ion-label>
-    <ion-card-header>
+  <a routerDirection="forward" [routerLink]="['/events/', event().id]"><ion-img [src]="event().image"
+      [alt]="event().title" style="width: 100%;"></ion-img></a>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-chip [routerLink]="['/profile', event().creator.id]">
+          <ion-avatar>
+            <ion-img src="{{ event().creator.avatar }}" alt="{{ event().creator.name }}"></ion-img>
+          </ion-avatar>
+          <ion-label>
+            <p>{{ event().creator.name }}</p>
+          </ion-label>
+        </ion-chip>
+      </ion-col>
+      <ion-col offset="6">
         @if (event().mine){
-        <ion-fab vertical="bottom" horizontal="end" edge>
-          <ion-fab-button size="small"> <!--TODO: Hacer con un action sheet que tiene más código-->
-            <ion-icon name="ellipsis-horizontal"></ion-icon>
-          </ion-fab-button>
-          <ion-fab-list side="start">
-            <ion-fab-button size="small" color="danger" (click)="deleteEvent()">
-              <ion-icon name="trash" style="width: 50%;"></ion-icon>
-            </ion-fab-button>
-            <ion-fab-button size="small" color="success">
-              <ion-icon name="pencil" style="width: 50%;"></ion-icon>
-            </ion-fab-button>
-          </ion-fab-list>
-        </ion-fab>
-      }
-      <ion-card-title routerDirection="forward" [routerLink]="['/events/', event().id]">{{ event().title
+        <ion-button shape="round" fill="outline" color="warning" (click)="showAction()"><ion-icon
+            name="ellipsis-horizontal"></ion-icon></ion-button>
+        }
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-card-header>
+    <ion-card-title routerDirection="forward" [routerLink]="['/events/', event().id]">{{ event().title
       }}</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      {{ event().description }}
-    </ion-card-content>
-    
-    <ion-item>
-    <ion-label>{{ event().distance }} km</ion-label> <!--TODO: Dejar esto bonito-->
-      <ion-label>{{ event().price | intlCurrency : "EUR" : "es-ES"}}</ion-label>
-    <ion-label>
-      <ion-icon name="people" slot="end"></ion-icon>
-      <ion-badge slot="end" color="success">{{event().numAttend}}</ion-badge>
-    </ion-label>
-  </ion-item>
-  
+    <ion-card-subtitle>
+      {{ event().date | date: 'dd/MM/yyyy' }}
+    </ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content>
+    {{ event().description }}
+    <ion-list>
+      <ion-item>
+        <ion-icon name="map" slot="start"></ion-icon>
+        <ion-label>{{ event().distance }} km</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="card" slot="start"></ion-icon>
+        <ion-label>{{ event().price | intlCurrency : "EUR" : "es-ES"}}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="people" slot="start"></ion-icon>
+        <ion-badge slot="start" color="success">{{event().numAttend}}</ion-badge>
+      </ion-item>
+    </ion-list>
+  </ion-card-content>
 </ion-card>

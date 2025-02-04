@@ -41,8 +41,8 @@
       <ion-item>
         <ion-label position="inset">
           <ion-label>Address:</ion-label>
-          @if (newEvent.address) {
-          <p>{{ newEvent.address }}</p>
+          @if (address) {
+          <p>{{ address }}</p>
           }
         </ion-label>
         <ion-button slot="end" (click)="openMap()" color="secondary">
@@ -63,19 +63,23 @@
         </ion-button>
       </ion-item>
     </ion-list>
-    @if (newEvent.image) {
-      <ion-img [src]="newEvent.image"></ion-img>
+    @if (imgBase64) {
+      <ion-img [src]="imgBase64"></ion-img>
     }
     <ion-grid>
       <ion-row>
         <ion-col>
-          <ion-button type="submit" color="primary" expand="block" [disabled]="eventForm.invalid || !newEvent.image || !newEvent.address">
+          <ion-button type="submit" color="primary" expand="block" [disabled]="eventForm.invalid || !imgBase64 || !address">
             <ion-icon name="add" slot="start"></ion-icon>
-            Add event
+            @if (id()){
+              Edit event
+            } @else {
+              Add event
+            }
           </ion-button>
         </ion-col>
         <ion-col>
-          <ion-button color="danger" expand="block" fill="outline" (click)="resetPage()" [routerLink]="['/events']" [routerDirection]="'root'"> <!--TODO: Cuando salgo una vez guarda las validaciones-->
+          <ion-button color="danger" expand="block" fill="outline"  [routerLink]="['/events']" [routerDirection]="'root'">
             <ion-icon name="arrow-undo-circle" slot="start"></ion-icon>
             Cancel
           </ion-button>

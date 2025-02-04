@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 
 export const logoutActivateGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
+  
   return inject(AuthService)
     .isLogged()
     .pipe(map((logged) => !logged || router.createUrlTree(['/events'])));
