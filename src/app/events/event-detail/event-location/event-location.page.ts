@@ -4,6 +4,8 @@ import { IonContent, IonHeader, IonToolbar, IonFabButton, IonIcon, IonLabel, Ion
 import { EventDetailPage } from '../event-detail.page';
 import { OlMapDirective } from 'src/app/shared/ol-maps/ol-map.directive';
 import { OlMarkerDirective } from 'src/app/shared/ol-maps/ol-marker.directive';
+import { LaunchNavigator } from '@awesome-cordova-plugins/launch-navigator';
+
 
 @Component({
   selector: 'event-location',
@@ -25,7 +27,8 @@ export class EventLocationPage {
   }
 
   startNavigation(){
-    console.log("Disponible pronto!"); //TODO: Falta por implementar la navegación
+    console.log("Disponible pronto!"); //TODO: Falta por implementar la navegación. PROBAR
+    LaunchNavigator.navigate(this.coordinates().reverse());
   }
 
 }
