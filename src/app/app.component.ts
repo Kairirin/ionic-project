@@ -5,9 +5,10 @@ import { SplashScreen } from '@capacitor/splash-screen';
 import { Platform, IonApp, IonContent, IonIcon, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterLink, IonRouterOutlet, IonSplitPane, IonAvatar, IonImg, IonButton, NavController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { User } from './auth/interfaces/user';
-import { home, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle, planet, eye, eyeOff, exit, add, trash, pencil, ellipsisHorizontal, people, search, compass, close, informationCircle, chatboxEllipses, navigate, thumbsUp, thumbsDown, person } from 'ionicons/icons';
+import { home, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle, planet, eye, eyeOff, exit, add, trash, pencil, ellipsisHorizontal, people, search, compass, close, informationCircle, chatboxEllipses, navigate, thumbsUp, thumbsDown, person, logoGoogle } from 'ionicons/icons';
 import { UsersService } from './profile/services/users.service';
 import { AuthService } from './auth/services/auth.service';
+import { SocialLogin } from '@capgo/capacitor-social-login';
 
 @Component({
   selector: 'app-root',
@@ -28,7 +29,7 @@ export class AppComponent {
   ];
 
   constructor() {
-    addIcons({ planet, home, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle, eye, eyeOff, exit, add, trash, pencil, ellipsisHorizontal, people, search, compass, close, informationCircle, chatboxEllipses, navigate, thumbsUp, thumbsDown, person });
+    addIcons({ planet, home, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle, eye, eyeOff, exit, add, trash, pencil, ellipsisHorizontal, people, search, compass, close, informationCircle, chatboxEllipses, navigate, thumbsUp, thumbsDown, person, logoGoogle });
 
     effect(() => {
       if (this.#authService.logged()) {
@@ -42,9 +43,16 @@ export class AppComponent {
   }
 
   async initializeApp() {
-    if (this.#platform.is('capacitor')) {
+    if (this.#platform.is('mobile')) {
       await this.#platform.ready();
       SplashScreen.hide();
+
+      await SocialLogin.initialize({
+        google: {
+          webClientId: '746820501392-oalflicqch2kuc12s8rclb5rf7b1fist.apps.googleusercontent.com', //MI ID: 1161264609-p0pct0u7g1b72j2riaqp1mlh284l4smk.apps.googleusercontent.com
+          //ID Arturo: 746820501392-oalflicqch2kuc12s8rclb5rf7b1fist.apps.googleusercontent.com
+        },
+      });
     }
   }
 

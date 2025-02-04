@@ -3,7 +3,7 @@ import { HttpInterceptorFn } from "@angular/common/http";
 
 export const baseUrlInterceptor: HttpInterceptorFn = (req, next) => {
   const serverUrl = 'https://api.fullstackpro.es/svtickets';
-  /* const serverUrl = isDevMode() ? 'http://localhost:3000' : 'https://api.fullstackpro.es/assbook'; */
+/*   const serverUrl = isDevMode() ? 'http://localhost:3000' : 'https://api.fullstackpro.es/assbook'; */
   const reqClone = req.clone({
     url: `${serverUrl}/${req.url}`,
   });

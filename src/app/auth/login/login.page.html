@@ -27,6 +27,12 @@
           </ion-button>
         </ion-col>
         <ion-col>
+          <ion-button expand="block" color="primary" (click)="loginGoogle()">
+            <ion-icon name="logo-google" slot="start"></ion-icon>
+            <ion-label>Login with Google</ion-label>
+          </ion-button>
+        </ion-col>
+        <ion-col>
           <ion-button color="tertiary" expand="block" [routerLink]="['/auth/register']" [routerDirection]="'root'">
             <ion-icon name="document-text" slot="start"></ion-icon>
             Register

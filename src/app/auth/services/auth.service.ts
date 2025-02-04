@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { Observable, catchError, from, map, of, switchMap } from 'rxjs';
-import { User, UserLogin } from '../interfaces/user';
+import { User, UserGoogle, UserLogin } from '../interfaces/user';
 import { SingleUserResponse, TokenResponse } from '../interfaces/responses';
 
 @Injectable({
@@ -59,6 +59,20 @@ export class AuthService {
           catchError(() => of(false)) 
         );
       }),
+    );
+  }
+
+  loginGoogle(userGoogle: UserGoogle, firebaseToken?: string) : Observable<void> {
+    return this.#http.post<TokenResponse>(`${this.#authUrl}/google`, {...userGoogle, firebaseToken})
+    .pipe(
+      switchMap(async (r) => {
+        try {
+          await Preferences.set({ key: 'fs-token', value: r.accessToken });
+          this.#logged.set(true);
+        } catch (e) {
+          throw new Error('Can\'t save authentication token in storage!');
+        }
+      })
     );
   }
 }
