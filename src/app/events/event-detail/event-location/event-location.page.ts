@@ -27,7 +27,6 @@ export class EventLocationPage {
   }
 
   startNavigation(){
-    console.log("Disponible pronto!"); //TODO: Falta por implementar la navegación. PROBAR
     LaunchNavigator.navigate(this.coordinates().reverse());
   }
 

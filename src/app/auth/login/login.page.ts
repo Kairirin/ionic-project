@@ -1,7 +1,8 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { PushNotifications, Token } from '@capacitor/push-notifications';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { AlertController, IonButton, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonList, IonRouterLink, IonRow, IonTitle, IonToolbar, NavController, IonLabel } from '@ionic/angular/standalone';
+import { Platform, AlertController, IonButton, IonCol, IonContent, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonList, IonRouterLink, IonRow, IonTitle, IonToolbar, NavController, IonLabel } from '@ionic/angular/standalone';
 import { AuthService } from '../services/auth.service';
 import { Geolocation } from '@capacitor/geolocation';
 import { UserFacebook, UserGoogle, UserLogin } from '../interfaces/user';
@@ -16,13 +17,16 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   imports: [ ReactiveFormsModule, RouterLink, IonRouterLink, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonInput, IonGrid, IonRow, IonCol, IonButton, IonIcon, IonLabel]
 })
 export class LoginPage {
-/*   coords = signal<[number, number]>([0, 0]); */
-  showPass = false;
-
   #authService = inject(AuthService);
   #alertCtrl = inject(AlertController);
   #navCtrl = inject(NavController);
   #destroyRef = inject(DestroyRef);
+  #platform = inject(Platform);
+
+  firebaseToken?: string;
+
+  showPass = false;
+
 
   loginForm = new FormGroup({ //TODO: Comprobar que esté bien
     email: new FormControl('', {
@@ -44,6 +48,15 @@ export class LoginPage {
 
   constructor() {
     this.getLocation();
+    
+    if (this.#platform.is('capacitor')) {
+      PushNotifications.register();
+
+      // On success, we should be able to receive notifications
+      PushNotifications.addListener('registration', (token: Token) => {
+        this.firebaseToken = token.value;
+      });
+    }
   }
 
   async getLocation() {
@@ -53,22 +66,14 @@ export class LoginPage {
 
     this.userLogin.lat = coordinates.coords.latitude;
     this.userLogin.lng = coordinates.coords.longitude;
-
-/*     this.coords.set([coordinates.coords.longitude, coordinates.coords.latitude]) */
   }
 
   login() {
     this.userLogin.email = this.loginForm.get('email')?.getRawValue();
     this.userLogin.password = this.loginForm.get('password')?.getRawValue();
-/*     const userLogin: UserLogin = {
-      email: this.loginForm.get('email')?.getRawValue(),
-      password: this.loginForm.get('password')?.getRawValue(),
-      lat: this.coords()[1],
-      lng: this.coords()[0],
-    }; */
 
     this.#authService
-      .login(this.userLogin)
+      .login(this.userLogin, this.firebaseToken)
       .subscribe({
         next: () => this.#navCtrl.navigateRoot(['/events']),
         error: async (error) => {
@@ -121,7 +126,7 @@ export class LoginPage {
     } catch (err) {
       console.error(err);
     }
-  } //TODO: NO FUNCIONA
+  }
 
   async loginFacebook() {
     const resp = await SocialLogin.login({

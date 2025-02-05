@@ -3,7 +3,8 @@ import { Injectable, inject, signal } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { Observable, catchError, from, map, of, switchMap } from 'rxjs';
 import { User, UserFacebook, UserGoogle, UserLogin } from '../interfaces/user';
-import { SingleUserResponse, TokenResponse } from '../interfaces/responses';
+import { TokenResponse } from '../interfaces/responses';
+import { PushNotifications } from '@capacitor/push-notifications';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +39,7 @@ export class AuthService {
 
   async logout(): Promise<void> {
     await Preferences.remove({ key: 'fs-token' });
+    PushNotifications.unregister();
     this.#logged.set(false);
   }
 

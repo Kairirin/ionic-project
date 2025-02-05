@@ -1,11 +1,11 @@
-import { CommonModule } from '@angular/common';
 import { Component, effect, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SplashScreen } from '@capacitor/splash-screen';
-import { Platform, IonApp, IonContent, IonIcon, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterLink, IonRouterOutlet, IonSplitPane, IonAvatar, IonImg, IonButton, NavController } from '@ionic/angular/standalone';
+import { Platform, IonApp, IonContent, IonIcon, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterLink, IonRouterOutlet, IonSplitPane, IonAvatar, IonImg, IonButton, NavController, ToastController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { User } from './auth/interfaces/user';
 import { home, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle, planet, eye, eyeOff, exit, add, trash, pencil, ellipsisHorizontal, people, search, compass, close, informationCircle, chatboxEllipses, navigate, thumbsUp, thumbsDown, person, logoGoogle, logoFacebook, map, card, golf, colorWand } from 'ionicons/icons';
+import { ActionPerformed, PushNotificationSchema, PushNotifications } from '@capacitor/push-notifications';
 import { UsersService } from './profile/services/users.service';
 import { AuthService } from './auth/services/auth.service';
 import { SocialLogin } from '@capgo/capacitor-social-login';
@@ -22,6 +22,7 @@ export class AppComponent {
   #authService = inject(AuthService);
   #platform = inject(Platform);
   #nav = inject(NavController);
+  #toast = inject(ToastController);
 
   public appPages = [{ title: 'Events', url: '/events', icon: 'planet' },
     { title: 'New event', url: '/events/add', icon: 'add'},
@@ -43,19 +44,50 @@ export class AppComponent {
   }
 
   async initializeApp() {
-    if (this.#platform.is('capacitor')) {
+    if (this.#platform.is('mobile')) { //TODO: En apuntes pone capacitor, pero lo hemos cambiado para login de google
       await this.#platform.ready();   
       SplashScreen.hide();
       await SocialLogin.initialize({
         google: {
-          webClientId: '746820501392-oalflicqch2kuc12s8rclb5rf7b1fist.apps.googleusercontent.com', //MI ID: 1161264609-p0pct0u7g1b72j2riaqp1mlh284l4smk.apps.googleusercontent.com
-          //ID Arturo: 746820501392-oalflicqch2kuc12s8rclb5rf7b1fist.apps.googleusercontent.com
+          webClientId: '746820501392-oalflicqch2kuc12s8rclb5rf7b1fist.apps.googleusercontent.com',
         },
         facebook: {
           appId: '474376018619677',
           clientToken: '04c13f5805fafe10f6be54f55e079882',
         },
       });
+
+      const res = await PushNotifications.checkPermissions();
+      if(res.receive !== 'granted') {
+        await PushNotifications.requestPermissions();
+      }
+
+      // Show us the notification payload if the app is open on our device
+      PushNotifications.addListener(
+        'pushNotificationReceived',
+        async (notification: PushNotificationSchema) => {
+          const toast = await this.#toast.create({
+            header: notification.title,
+            message: notification.body,
+            duration: 3000,
+          });
+          await toast.present();
+        }
+      );
+
+      // Method called when tapping on a notification
+      PushNotifications.addListener(
+        'pushNotificationActionPerformed',
+        (notification: ActionPerformed) => {
+          if (notification.notification.data.prodId) {
+            this.#nav.navigateRoot([
+              '/events',
+              notification.notification.data.id, //TODO: Comprobar que el nombre es id
+              'comments',
+            ]);
+          }
+        }
+      );
     }
   }
 
