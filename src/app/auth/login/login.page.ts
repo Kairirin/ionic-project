@@ -49,9 +49,9 @@ export class LoginPage {
   constructor() {
     this.getLocation();
     
-    if (this.#platform.is('capacitor')) {
+    if (this.#platform.is('capacitor') || this.#platform.is('mobile') || this.#platform.is('android')) {
       PushNotifications.register();
-
+      
       // On success, we should be able to receive notifications
       PushNotifications.addListener('registration', (token: Token) => {
         this.firebaseToken = token.value;
@@ -161,4 +161,14 @@ export class LoginPage {
           });
     }
   }
+
+/*   async alertFireBase(token: string) {
+    (
+      await this.#alertCtrl.create({
+        header: 'Push',
+        message: token,
+        buttons: ['Ok'],
+      })
+    ).present();
+  } */
 }

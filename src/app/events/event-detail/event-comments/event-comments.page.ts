@@ -21,7 +21,7 @@ export class EventCommentsPage  {
   #alertCtrl = inject(AlertController);
   #eventsService = inject(EventsService);
   ionRefresher = viewChild.required(IonRefresher);
-  #platform = inject(Platform); //TODO: Esto es para las push realmente
+  #platform = inject(Platform);
   #destroyRef = inject(DestroyRef);
 
   id = input.required({ transform: numberAttribute });
@@ -33,16 +33,20 @@ export class EventCommentsPage  {
   comments = computed(() => this.commentsResource.value() ?? []);
 
   constructor() {
-    this.#platform.resume.pipe(takeUntilDestroyed()).subscribe(
-      () => this.commentsResource.reload() // Recargamos comentarios cuando la aplicación se reactiva (resume)
-    );
-
+    this.#platform.resume.pipe(takeUntilDestroyed()).subscribe(() => this.commentsResource.reload()); // Recargamos comentarios cuando la aplicación se reactiva (resume)
+    
     effect(() => {
       if(!this.commentsResource.isLoading()) {
         this.ionRefresher().complete();
       }
     });
-  }
+  }//TODO: Corregir esto, proque funciona mejor con el constructor, pero cuando alguien deja de asistir y luego entra no se recargan los comentarios, pero en el ion no deja de cargas nunca.
+  
+/*   ionViewWillEnter() { 
+
+    if(!this.commentsResource.isLoading())
+      this.ionRefresher().complete();
+  } */
 
   loadComments(refresher?: IonRefresher) {
     this.commentsResource.reload();
