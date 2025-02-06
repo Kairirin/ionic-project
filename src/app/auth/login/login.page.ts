@@ -28,7 +28,7 @@ export class LoginPage {
   showPass = false;
 
 
-  loginForm = new FormGroup({ //TODO: Comprobar que esté bien
+  loginForm = new FormGroup({
     email: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.email],
@@ -162,7 +162,9 @@ export class LoginPage {
     }
   }
 
-/*   async alertFireBase(token: string) {
+/*   Pruebas para notificaciones push
+
+  async alertFireBase(token: string) {
     (
       await this.#alertCtrl.create({
         header: 'Push',

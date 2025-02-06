@@ -55,7 +55,7 @@ export class AuthService {
 
         return this.#http.get('auth/validate').pipe(
           map(() => {
-            this.#logged.set(true); //TODO: Comprobar que está bien los logged
+            this.#logged.set(true);
             return true; 
           }),
           catchError(() => of(false)) 

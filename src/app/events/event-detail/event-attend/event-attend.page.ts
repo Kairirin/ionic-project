@@ -15,8 +15,8 @@ import { RouterLink } from '@angular/router';
 export class EventAttendPage {
   #eventsService = inject(EventsService);
   ionRefresher = viewChild.required(IonRefresher);
-  #platform = inject(Platform); //TODO: Esto es para las push realmente
   #destroyRef = inject(DestroyRef);
+  #platform = inject(Platform);
   event = inject(EventDetailPage).event;
 
   attendResource = rxResource({

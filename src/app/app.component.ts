@@ -44,7 +44,7 @@ export class AppComponent {
   }
 
   async initializeApp() {
-    if (this.#platform.is('mobile') || this.#platform.is('capacitor')) { //TODO: En apuntes pone capacitor, pero lo hemos cambiado para login de google
+    if (this.#platform.is('mobile') || this.#platform.is('capacitor')) {
       await this.#platform.ready();   
       SplashScreen.hide();
       await SocialLogin.initialize({
@@ -82,7 +82,7 @@ export class AppComponent {
           if (notification.notification.data.eventId) {
             this.#nav.navigateRoot([
               '/events',
-              notification.notification.data.eventId, //TODO: He probado tanto con id como eventId, pero nunca me lleva a la parte de comentarios.
+              notification.notification.data.eventId,
               'comments',
             ]);
           }

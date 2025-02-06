@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { IonRouterLink, ToastController, NavController, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonInput, IonIcon, IonImg, IonButton, IonGrid, IonRow, IonCol, IonLabel } from '@ionic/angular/standalone';
@@ -21,8 +21,6 @@ export class RegisterPage {
   #toastCtrl = inject(ToastController);
   #nav = inject(NavController);
   #changeDetector = inject(ChangeDetectorRef);
-  
-  coords = signal<[number, number]>([0, 0]); //TODO: En principio esto no me hace falta
   
   newUser: User = {
     name: "",
@@ -63,8 +61,6 @@ export class RegisterPage {
 
     this.newUser.lat = coordinates.coords.latitude;
     this.newUser.lng = coordinates.coords.longitude;
-
-/*     this.coords.set([coordinates.coords.longitude, coordinates.coords.latitude]) */
   }
 
   register() {
@@ -72,7 +68,6 @@ export class RegisterPage {
     this.newUser.email = this.registerForm.get('email')?.getRawValue();
     this.newUser.password = this.registerForm.get('password')?.getRawValue();
 
-    console.log(this.newUser); //TODO: Comprobar que lo manda bien
     this.#authService.register(this.newUser).subscribe(
       async () => {
         (await this.#toastCtrl.create({
@@ -104,7 +99,7 @@ export class RegisterPage {
       source: CameraSource.Photos,
       height: 200,
       width: 200,
-      allowEditing: true, //TODO: Comprobar que permita mandar foto
+      allowEditing: true,
       resultType: CameraResultType.DataUrl
     });
 
@@ -112,4 +107,3 @@ export class RegisterPage {
     this.#changeDetector.markForCheck();
   }
 }
-

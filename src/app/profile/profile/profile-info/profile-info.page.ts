@@ -100,7 +100,7 @@ export class ProfileInfoPage {
       source: CameraSource.Photos,
       height: 200,
       width: 200,
-      allowEditing: true, //TODO: Comprobar que permita mandar foto
+      allowEditing: true,
       resultType: CameraResultType.DataUrl
     });
 

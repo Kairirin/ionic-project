@@ -21,8 +21,8 @@ export class EventCommentsPage  {
   #alertCtrl = inject(AlertController);
   #eventsService = inject(EventsService);
   ionRefresher = viewChild.required(IonRefresher);
-  #platform = inject(Platform);
   #destroyRef = inject(DestroyRef);
+  #platform = inject(Platform);
 
   id = input.required({ transform: numberAttribute });
 
