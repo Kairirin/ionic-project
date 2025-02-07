@@ -12,7 +12,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [FormsModule, RouterLink, IonRouterLink, IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, IonRefresher, IonRefresherContent, IonFab, IonFabButton, IonIcon, IonList, EventCardPage, IonInfiniteScroll, IonInfiniteScrollContent, IonSearchbar, IonButton, IonCol, IonRow, IonGrid ]
+  imports: [ FormsModule, RouterLink, IonRouterLink, IonHeader, IonToolbar, IonButtons, IonMenuButton, IonTitle, IonContent, IonRefresher, IonRefresherContent, IonFab, IonFabButton, IonIcon, IonList, EventCardPage, IonInfiniteScroll, IonInfiniteScrollContent, IonSearchbar, IonButton, IonCol, IonRow, IonGrid ]
 })
 export class HomePage {
   #eventsService = inject(EventsService);
@@ -29,11 +29,7 @@ export class HomePage {
   attending = input<string>('');
 
   ionViewWillEnter() {
-    if (this.attending()){
-      this.getEventsByAttending();
-    } else {
       this.reloadEvents();
-    }
   }
 
   async showFilters() {
@@ -43,17 +39,20 @@ export class HomePage {
         {
           label: 'Distance',
           type: 'radio',
-          value: 'distance'
+          value: 'distance',
+          checked: this.order() == 'distance'
         },
         {
           label: 'Price',
           type: 'radio',
-          value: 'price'
+          value: 'price',
+          checked: this.order() == 'price'
         },
         {
           label: 'Date',
           type: 'radio',
-          value: 'date'
+          value: 'date',
+          checked: this.order() == 'date'
         }
       ],
       buttons: ['Filter', 'Cancel'],
@@ -69,44 +68,22 @@ export class HomePage {
   }
 
   reloadEvents(refresher?: IonRefresher) {
-    this.page = 1; //TODO: No hace bien la búsqueda ni la carga de eventos después de buscar
-
-    this.#eventsService
-    .getEvents(this.search, this.order(), this.page, this.creator())
-    .pipe(takeUntilDestroyed(this.#destroyRef))
-    .subscribe((resp) => {
-      this.events.set(resp.events);
-      this.loadMore = resp.more;
-
-      refresher?.complete();
-    });
+    this.page = 1;
+    
+    if (this.attending())
+      this.getEventsByAttending(refresher);
+    else{
+      this.getEvents(refresher);
+    }
   }
 
   loadMoreEvents(infinite?: IonInfiniteScroll) {
     this.page++;
 
     if (this.attending()){
-      this.#eventsService.getEventsAttending(this.search, this.order(), this.page, this.attending())
-      .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe({
-        next: (resp) => {
-          this.events.update((events) => [...events, ...resp.events]);
-          infinite?.complete();
-          this.loadMore = resp.more;
-        },
-        error: (error) => console.log(error)
-      })
+      this.getEventsByAttending(undefined, infinite);
     } else {
-      this.#eventsService.getEvents(this.search, this.order(), this.page, this.creator())
-        .pipe(takeUntilDestroyed(this.#destroyRef))
-        .subscribe({
-          next: (resp) => {
-            this.events.update((events) => [...events, ...resp.events]);
-            infinite?.complete();
-            this.loadMore = resp.more;
-          },
-          error: (error) => console.log(error)
-        })
+      this.getEvents(undefined, infinite);
     }
   }
 
@@ -114,12 +91,39 @@ export class HomePage {
     this.events.update((events) => events.filter((e) => e !== ev));
   }
 
-  getEventsByAttending() {
+  getEvents(refresher?: IonRefresher, infinite?: IonInfiniteScroll) {
+    this.#eventsService
+      .getEvents(this.search, this.order(), this.page, this.creator())
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: (resp) => {
+          if(this.page == 1)
+            this.events.set(resp.events);
+          else 
+            this.events.update((events) => [...events, ...resp.events]);
+  
+          infinite?.complete();
+          this.loadMore = resp.more;
+          refresher?.complete();
+        }
+      });
+  }
+
+  getEventsByAttending(refresher?: IonRefresher, infinite?: IonInfiniteScroll) {
     this.#eventsService
       .getEventsAttending(this.search, this.order(), this.page, this.attending())
       .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe((resp) => {
-        this.events.set(resp.events)
+      .subscribe({
+        next: (resp) => {
+          if(this.page == 1)
+            this.events.set(resp.events);
+          else 
+            this.events.update((events) => [...events, ...resp.events]);
+  
+          infinite?.complete();
+          this.loadMore = resp.more;
+          refresher?.complete();
+        }
       });
   }
 }

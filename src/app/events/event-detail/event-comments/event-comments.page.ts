@@ -1,11 +1,9 @@
-import { Component, computed, DestroyRef, effect, inject, input, numberAttribute, ViewChild, viewChild } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, input, numberAttribute, viewChild } from '@angular/core';
 import { AlertController, Platform, IonContent, IonHeader, IonToolbar, IonList, IonListHeader, IonItem, IonAvatar, IonLabel, IonRefresher, IonRefresherContent, IonButton, IonImg  } from '@ionic/angular/standalone';
 import { EventsService } from '../../services/events.service';
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { EventDetailPage } from '../event-detail.page';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { OverlayEventDetail } from '@ionic/core/components';
 import { NewComment } from '../../interfaces/my-event';
 import { RouterLink } from '@angular/router';
 
@@ -33,20 +31,20 @@ export class EventCommentsPage  {
   comments = computed(() => this.commentsResource.value() ?? []);
 
   constructor() {
-    this.#platform.resume.pipe(takeUntilDestroyed()).subscribe(() => this.commentsResource.reload()); // Recargamos comentarios cuando la aplicación se reactiva (resume)
-    
+    this.#platform.resume
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe(() => this.commentsResource.reload());
+
     effect(() => {
       if(!this.commentsResource.isLoading()) {
         this.ionRefresher().complete();
       }
     });
-  }//TODO: Corregir esto, proque funciona mejor con el constructor, pero cuando alguien deja de asistir y luego entra no se recargan los comentarios, pero en el ion no deja de cargas nunca.
+  }
   
-/*   ionViewWillEnter() { 
-
-    if(!this.commentsResource.isLoading())
-      this.ionRefresher().complete();
-  } */
+  ionViewWillEnter() { 
+    this.loadComments();
+  }
 
   loadComments(refresher?: IonRefresher) {
     this.commentsResource.reload();

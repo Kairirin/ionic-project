@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonToolbar, IonGrid, IonCol, IonRow, IonItem, IonLabel, IonImg, IonButton, IonIcon, ModalController, ActionSheetController, NavController } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonToolbar, IonGrid, IonCol, IonRow, IonItem, IonLabel, IonImg, IonButton, IonIcon, ModalController, ActionSheetController, NavController, ToastController } from '@ionic/angular/standalone';
 import { ProfilePage } from '../profile.page';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { UsersService } from '../../services/users.service';
@@ -13,19 +13,20 @@ import { ModalContentComponent } from './modal-content/modal-content.component';
   templateUrl: './profile-info.page.html',
   styleUrls: ['./profile-info.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonToolbar, FormsModule, IonGrid, IonCol, IonRow, IonItem, IonLabel, IonImg, IonButton, IonIcon, ReactiveFormsModule ]
+  imports: [ IonContent, IonHeader, IonToolbar, FormsModule, IonGrid, IonCol, IonRow, IonItem, IonLabel, IonImg, IonButton, IonIcon, ReactiveFormsModule ],
 })
 export class ProfileInfoPage {
   #userService = inject(UsersService);
   #changeDetector = inject(ChangeDetectorRef);
+  #actionSheetController = inject(ActionSheetController);
   #modalCtrl = inject(ModalController);
   #navCtrl = inject(NavController);
-  #actionSheetController = inject(ActionSheetController);
+  #toastCtrl = inject(ToastController);
   #destroyRef = inject(DestroyRef);
-  
+
   user = inject(ProfilePage).user;
 
-  async showAction(){
+  async showAction() {
     const actionSheet = await this.#actionSheetController.create({
       header: 'About this user',
       buttons: [
@@ -33,14 +34,14 @@ export class ProfileInfoPage {
           text: 'Events created',
           icon: 'color-wand',
           handler: () => {
-            this.#navCtrl.navigateRoot(['/events', { creator: this.user().id}])
+            this.#navCtrl.navigateRoot(['/events', { creator: this.user().id },]);
           },
         },
         {
           text: 'Events attending',
           icon: 'golf',
           handler: () => {
-            this.#navCtrl.navigateRoot(['/events', { attending: this.user().id}])
+            this.#navCtrl.navigateRoot(['/events', { attending: this.user().id },]);
           },
         },
         {
@@ -53,11 +54,16 @@ export class ProfileInfoPage {
     await actionSheet.present();
   }
 
-  async openModal(type: string){
-    if (type === "profile"){
+  async openModal(type: string) {
+    if (type === 'profile') {
       const modal = await this.#modalCtrl.create({
         component: ModalContentComponent,
-        componentProps: { title: type, username: this.user().name, userEmail: this.user().email, profile: true },
+        componentProps: {
+          title: type,
+          username: this.user().name,
+          userEmail: this.user().email,
+          profile: true,
+        },
       });
       await modal.present();
       const result = await modal.onDidDismiss();
@@ -81,18 +87,17 @@ export class ProfileInfoPage {
     }
   }
 
-  async takePhoto() {;
+  async takePhoto() {
     const photo = await Camera.getPhoto({
       source: CameraSource.Camera,
       quality: 90,
       height: 200,
       width: 200,
       allowEditing: true,
-      resultType: CameraResultType.DataUrl
+      resultType: CameraResultType.DataUrl,
     });
 
     this.saveAvatar(photo.dataUrl as string);
-
   }
 
   async pickFromGallery() {
@@ -101,7 +106,7 @@ export class ProfileInfoPage {
       height: 200,
       width: 200,
       allowEditing: true,
-      resultType: CameraResultType.DataUrl
+      resultType: CameraResultType.DataUrl,
     });
 
     this.saveAvatar(photo.dataUrl as string);
@@ -109,17 +114,35 @@ export class ProfileInfoPage {
 
   saveAvatar(avatar: string) {
     const newAvatar: UserPhotoEdit = {
-      avatar: avatar
-    }
+      avatar: avatar,
+    };
 
-    this.#userService.saveAvatar(newAvatar)
+    this.#userService
+      .saveAvatar(newAvatar)
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: (result) => {
           this.user().avatar = result;
           this.#changeDetector.markForCheck();
+          this.showToast("Avatar updated", "success");
         },
-        error: () => {} //TODO: Poner alert
-      })
-    }
+        error: () => this.showToast("Avatar's updating failed. Try again", "danger"),
+      });
+  }
+
+  async showToast(message: string, color: string) {
+    const toast = await this.#toastCtrl.create({
+      message: message,
+      duration: 4000,
+      position: 'bottom',
+      color: color,
+      buttons: [
+        {
+          icon: 'close-circle',
+          role: 'cancel',
+        },
+      ],
+    });
+    await toast.present();
+  }
 }

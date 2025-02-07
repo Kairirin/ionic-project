@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, DestroyRef, effect, inject, input, numberAttribute, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, input, numberAttribute, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { takeUntilDestroyed, toSignal } from "@angular/core/rxjs-interop";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NavController, ToastController, ModalController, IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonIcon, IonLabel, IonButton, IonImg, IonGrid, IonRow, IonCol, IonTextarea, IonInput, IonMenuButton, IonButtons } from '@ionic/angular/standalone';
 import { EventsService } from '../services/events.service';
 import { minDateValidator } from 'src/app/shared/validators/min-date.validator';
@@ -147,7 +147,7 @@ export class NewEventPage {
       resultType: CameraResultType.DataUrl 
     });
 
-    this.imgBase64 = photo.dataUrl as string; //TODO: Que al cancelar la foto sea cadena vacía
+    this.imgBase64 = photo.dataUrl as string;
     this.#changeDetector.markForCheck();
   }
 

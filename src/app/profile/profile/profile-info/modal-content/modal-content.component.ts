@@ -1,10 +1,10 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ModalController, AlertController, ToastController, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonList, IonInput, IonItem, IonCol, IonRow } from '@ionic/angular/standalone';
+import { ModalController, ToastController, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonList, IonInput, IonItem, IonCol, IonRow } from '@ionic/angular/standalone';
+import { ValueEqualsDirective } from 'src/app/shared/directives/value-equals.directive';
 import { UserPasswordEdit, UserProfileEdit } from 'src/app/auth/interfaces/user';
 import { UsersService } from 'src/app/profile/services/users.service';
-import { ValueEqualsDirective } from 'src/app/shared/directives/value-equals.directive';
 
 @Component({
   selector: 'modal-content',
@@ -14,7 +14,6 @@ import { ValueEqualsDirective } from 'src/app/shared/directives/value-equals.dir
 })
 export class ModalContentComponent  {
   #modalCtrl = inject(ModalController);
-  #alertCtrl = inject(AlertController);
   #toastCtrl = inject(ToastController);
   #userService = inject(UsersService);
   #destroyRef = inject(DestroyRef);
@@ -48,6 +47,13 @@ export class ModalContentComponent  {
     })
   });
 
+  ionViewWillEnter() {
+    if (this.profile){
+      this.profileForm.get('name')!.setValue(this.username);
+      this.profileForm.get('email')!.setValue(this.userEmail);
+    }
+  }
+
   updateProfile() {
     const userProfile: UserProfileEdit = {
       ...this.profileForm.getRawValue()
@@ -58,18 +64,12 @@ export class ModalContentComponent  {
       .subscribe({
         next: () => {
           this.#modalCtrl.dismiss({ name: userProfile.name, email: userProfile.email});
-          this.showSuccessToast("Profile updated!");
+          this.showToast("Profile updated!", "success");
           this.profile = false;
           this.profileForm.reset();
         },
         error: async () => {
-          (
-            await this.#alertCtrl.create({
-              header: 'Update error',
-              message: 'Incorrect email and/or password',
-              buttons: ['Ok'],
-            })
-          ).present();
+          this.showToast("Profile's updating failed. Try again later", "danger");
       }
   });
   }
@@ -84,35 +84,28 @@ export class ModalContentComponent  {
       .subscribe({
         next: () => {
           this.#modalCtrl.dismiss({ password: userPassword.password });
-          this.showSuccessToast("Password updated");
+          this.showToast("Password updated", "success");
           this.password = false;
           this.passwordForm.reset();
         },
-        error: async (error) => {
-          (
-            await this.#alertCtrl.create({
-              header: 'Update error',
-              message: error, //TODO: Modificar
-              buttons: ['Ok'],
-            })
-          ).present();
-          this.passwordForm.reset();
+        error: async () => {
+          this.showToast("Password's updating failed. Try again later", "danger");
         }
       })
   }
 
-  async showSuccessToast(message: string) {
+  async showToast(message: string, color: string) {
     const toast = await this.#toastCtrl.create({
       message: message,
-      duration: 3000,
+      duration: 4000,
       position: 'bottom',
-      color: 'success',
+      color: color,
       buttons: [
         {
           icon: 'close-circle',
-          role: 'cancel'
-        }
-      ]
+          role: 'cancel',
+        },
+      ],
     });
     await toast.present();
   }

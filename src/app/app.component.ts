@@ -26,7 +26,7 @@ export class AppComponent {
 
   public appPages = [{ title: 'Events', url: '/events', icon: 'planet' },
     { title: 'New event', url: '/events/add', icon: 'add'},
-    { title: 'My profile', url: 'profile/me', icon: 'person'}
+    { title: 'My profile', url: '/profile/me', icon: 'person'}
   ];
 
   constructor() {
@@ -47,7 +47,7 @@ export class AppComponent {
     if (this.#platform.is('mobile') || this.#platform.is('capacitor')) {
       await this.#platform.ready();   
       SplashScreen.hide();
-      await SocialLogin.initialize({
+      await SocialLogin.initialize({ //Este método al inicializar saca error por consola.
         google: {
           webClientId: '746820501392-oalflicqch2kuc12s8rclb5rf7b1fist.apps.googleusercontent.com',
         },

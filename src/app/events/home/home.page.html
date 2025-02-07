@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Events</ion-title>
+    <ion-title>Events {{ attending()? 'attending' : ''}}</ion-title>
   </ion-toolbar>
   <ion-toolbar>
     <ion-grid>

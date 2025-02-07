@@ -56,7 +56,7 @@ export class EventCardPage {
       header: 'Are you sure?',
       subHeader: 'The event will be removed',
       buttons: ['I want to delete it', 'Cancel'],
-    }); //TODO: No sé porqué se muestra dos veces
+    });
 
     await alert.present();
 
@@ -67,7 +67,6 @@ export class EventCardPage {
         next: () => {
           this.deleted.emit();
           this.showToast("The event has been removed!")
-          this.#navCtrl.navigateRoot(['/events'])
         },
         error: () => this.showToast("The event could not be removed at this moment")
       })
@@ -89,5 +88,4 @@ export class EventCardPage {
     });
     await toast.present();
   }
-
 }
