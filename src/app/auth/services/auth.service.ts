@@ -34,7 +34,7 @@ export class AuthService {
   }
 
   register(user: User): Observable<void> {
-    return this.#http.post<void>('auth/register', user);
+    return this.#http.post<void>(`${this.#authUrl}/register`, user);
   }
 
   async logout(): Promise<void> {
@@ -53,7 +53,7 @@ export class AuthService {
           return of(false);
         }
 
-        return this.#http.get('auth/validate').pipe(
+        return this.#http.get(`${this.#authUrl}/validate`).pipe(
           map(() => {
             this.#logged.set(true);
             return true; 

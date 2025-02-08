@@ -4,7 +4,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NavController, ToastController, ModalController, IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonIcon, IonLabel, IonButton, IonImg, IonGrid, IonRow, IonCol, IonTextarea, IonInput, IonMenuButton, IonButtons } from '@ionic/angular/standalone';
 import { EventsService } from '../services/events.service';
 import { minDateValidator } from 'src/app/shared/validators/min-date.validator';
-import { MyEvent, MyEventInsert } from '../interfaces/my-event';
+import { MyEventInsert } from '../interfaces/my-event';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { RouterLink } from '@angular/router';
 import { ModalContentComponent } from './modal-content/modal-content.component';

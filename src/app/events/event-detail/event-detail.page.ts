@@ -20,5 +20,4 @@ export class EventDetailPage {
     loader: ({request: id}) => this.#eventsService.getEvent(id)
   });
   event = computed(() => this.eventResource.value());
-
 }

@@ -43,7 +43,7 @@ export class EventCommentsPage  {
   }
   
   ionViewWillEnter() { 
-    this.loadComments();
+    this.commentsResource.reload();
   }
 
   loadComments(refresher?: IonRefresher) {
@@ -87,7 +87,15 @@ export class EventCommentsPage  {
             const com = this.comments();
             this.commentsResource.set([...com!, comment]);
           },
-          error: (error) => console.log(error)
+          error: async (error) => {
+            (
+              await this.#alertCtrl.create({
+                header: 'Oops',
+                message: 'Something went wrong. Try again later',
+                buttons: ['Ok'],
+              })
+            ).present();
+          }
         });
     }
   }

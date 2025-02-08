@@ -11,7 +11,7 @@
   <form [formGroup]="eventForm" (ngSubmit)="sendEvent()">
     <ion-list>
       <ion-item lines="none">
-        <ion-input label="Title" labelPlacement="floating" formControlName="title" errorText="Title must be at least 5 letters"></ion-input> <!--TODO: Buscar otra forma de meter los validadores para distinto mensaje-->
+        <ion-input label="Title" labelPlacement="floating" formControlName="title" errorText="Title must be at least 5 letters"></ion-input>
         @if (eventForm.get('title')?.dirty && eventForm.get('title')?.valid){
           <ion-icon name="checkmark-circle" slot="end" color="success"></ion-icon>
         }

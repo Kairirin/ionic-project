@@ -1,10 +1,5 @@
 import { afterRenderEffect, Directive, input } from '@angular/core';
-import {
-  AbstractControl,
-  NG_VALIDATORS,
-  ValidationErrors,
-  Validator,
-} from '@angular/forms';
+import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator } from '@angular/forms';
 
 @Directive({
   selector: '[valueEquals]',
@@ -19,11 +14,10 @@ export class ValueEqualsDirective implements Validator {
 
 
   constructor() {
-    // Con effect da error. afterRenderEffect es similar pero se ejecuta después del renderizado
     afterRenderEffect(() => {
-      this.valueEquals(); // Creamos dependencia leyendo la señal
+      this.valueEquals();
       if(this.#validationChange) {
-        this.#validationChange(); // Revalidamos campo si cambia valor de entrada
+        this.#validationChange();
       }
     })
   }

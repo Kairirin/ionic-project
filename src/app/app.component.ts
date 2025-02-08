@@ -1,10 +1,10 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SplashScreen } from '@capacitor/splash-screen';
+import { home, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle, planet, eye, eyeOff, exit, add, trash, pencil, ellipsisHorizontal, people, search, compass, close, informationCircle, chatboxEllipses, navigate, thumbsUp, thumbsDown, person, logoGoogle, logoFacebook, map, card, golf, colorWand } from 'ionicons/icons';
 import { Platform, IonApp, IonContent, IonIcon, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterLink, IonRouterOutlet, IonSplitPane, IonAvatar, IonImg, IonButton, NavController, ToastController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { User } from './auth/interfaces/user';
-import { home, logIn, documentText, checkmarkCircle, images, camera, arrowUndoCircle, planet, eye, eyeOff, exit, add, trash, pencil, ellipsisHorizontal, people, search, compass, close, informationCircle, chatboxEllipses, navigate, thumbsUp, thumbsDown, person, logoGoogle, logoFacebook, map, card, golf, colorWand } from 'ionicons/icons';
 import { ActionPerformed, PushNotificationSchema, PushNotifications } from '@capacitor/push-notifications';
 import { UsersService } from './profile/services/users.service';
 import { AuthService } from './auth/services/auth.service';
@@ -17,7 +17,7 @@ import { SocialLogin } from '@capgo/capacitor-social-login';
   imports: [RouterLink, RouterLinkActive, IonRouterLink, IonApp, IonSplitPane, IonMenu, IonContent, IonList, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonAvatar, IonImg, IonButton],
 })
 export class AppComponent {
-  user = signal<User | null>(null); //TODO: No se actualiza la foto al cambiarla en el perfil
+  user = signal<User | null>(null);
   #userService = inject(UsersService);
   #authService = inject(AuthService);
   #platform = inject(Platform);
@@ -62,7 +62,6 @@ export class AppComponent {
         await PushNotifications.requestPermissions();
       }
 
-      // Show us the notification payload if the app is open on our device
       PushNotifications.addListener(
         'pushNotificationReceived',
         async (notification: PushNotificationSchema) => {
@@ -75,7 +74,6 @@ export class AppComponent {
         }
       );
 
-      // Method called when tapping on a notification
       PushNotifications.addListener(
         'pushNotificationActionPerformed',
         (notification: ActionPerformed) => {
