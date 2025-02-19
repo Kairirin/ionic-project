@@ -49,11 +49,11 @@ export class AppComponent {
       SplashScreen.hide();
       await SocialLogin.initialize({ //Este método al inicializar saca error por consola.
         google: {
-          webClientId: '746820501392-oalflicqch2kuc12s8rclb5rf7b1fist.apps.googleusercontent.com',
+          webClientId: '',
         },
         facebook: {
-          appId: '474376018619677',
-          clientToken: '04c13f5805fafe10f6be54f55e079882',
+          appId: '',
+          clientToken: '',
         },
       });
 
